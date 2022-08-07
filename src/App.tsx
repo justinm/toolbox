@@ -21,7 +21,7 @@ function App() {
             <Box sx={{ maxHeight: 150, width: logoSize }}>
               <img src={logo} alt="logo" />
             </Box>
-            <Typography variant={"h5"}>The OmniCalculator</Typography>
+            <Typography variant={"h5"}>The Developer Toolbox</Typography>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={11} md={8} lg={8} xl={8}>

@@ -11,21 +11,25 @@ import { URLEncoding } from "../matchers/urlencode";
 import HEXConverter from "../matchers/hex";
 import ColorMatcher from "../matchers/colors";
 import IPMatcher from "../matchers/ipv4";
+import { useDebounce } from "../utils/debounce";
+import { useAnalytics } from "use-analytics";
 
 const matchers: IMatcher[] = [
+  new ColorMatcher(),
   new IPMatcher(),
   new TimestampMatcher(),
-  new URLEncoding(),
   new HEXConverter(),
-  new ColorMatcher(),
+  new URLEncoding(),
   new Base64DecodeMatcher(),
   new Base64EncodeMatcher(),
 ];
 
 export const Home: FunctionComponent = () => {
+  const { track } = useAnalytics();
   const { setParam, params } = useSearchParams();
   const [searchQuery, setSearchQuery] = React.useState("");
   const q = React.useMemo(() => params.get("q"), []);
+  const debouncedQ = useDebounce(searchQuery, 1000);
 
   React.useEffect(() => {
     if (q && q !== searchQuery) {
@@ -36,6 +40,12 @@ export const Home: FunctionComponent = () => {
   React.useEffect(() => {
     setParam("q", searchQuery);
   }, [setParam, searchQuery]);
+
+  React.useEffect(() => {
+    if (debouncedQ) {
+      void track("query", debouncedQ);
+    }
+  }, [debouncedQ]);
 
   return (
     <Box>

@@ -27,13 +27,12 @@ declare module "use-analytics" {
   import { Component, ReactNode } from "react";
   import { AnalyticsInstance } from "analytics";
 
-  export function track(thing: string);
-  export function page();
-
   export class AnalyticsProvider extends Component<{
     children?: ReactNode;
     instance: AnalyticsInstance;
   }> {}
+
+  export function useAnalytics(): AnalyticsInstance;
 }
 
 declare module "node-ip" {}

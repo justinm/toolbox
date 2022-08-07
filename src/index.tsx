@@ -8,15 +8,23 @@ import doNotTrack from "analytics-plugin-do-not-track";
 import { AnalyticsProvider } from "use-analytics";
 import "./index.css";
 import { HistoryProvider } from "./providers/history";
+import { ReportHandler } from "web-vitals";
+
+const measurementIds: string[] = [];
+
+const plugins = [doNotTrack()];
+
+if (measurementIds.length) {
+  plugins.push(
+    googleAnalytics({
+      measurementIds,
+    })
+  );
+}
 
 const analytics = Analytics({
-  app: "awesome-app",
-  plugins: [
-    // doNotTrack(),
-    googleAnalytics({
-      measurementIds: [],
-    }),
-  ],
+  app: "devtoolbox",
+  plugins,
 });
 
 const root = ReactDOM.createRoot(
@@ -33,7 +41,16 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-// reportWebVitals();
+const reportHandler: ReportHandler = ({ id, name, value }) => {
+  analytics
+    .track("ga", {
+      eventCategory: "Web Vitals",
+      eventAction: name,
+      eventValue: Math.round(name === "CLS" ? value * 1000 : value), // values must be integers
+      eventLabel: id, // id unique to current page load
+      nonInteraction: true, // avoids affecting bounce rate
+    })
+    .catch(console.error);
+};
+
+reportWebVitals(reportHandler);
