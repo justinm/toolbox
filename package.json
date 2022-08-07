@@ -3,30 +3,70 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@analytics/google-analytics": "^1.0.3",
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@mui/core": "^5.0.0-alpha.54",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.3",
+    "analytics": "^0.8.1",
+    "analytics-plugin-do-not-track": "^0.1.5",
+    "buffer": "^6.0.3",
+    "copy-to-clipboard": "^3.3.2",
+    "history": "^5.3.0",
+    "luxon": "^3.0.1",
+    "netmask": "^2.0.2",
+    "numeral": "^2.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.34.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.7.4",
+    "tzdata": "^1.0.30",
+    "use-analytics": "^0.0.5",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
+    "@types/luxon": "^3.0.0",
+    "@types/netmask": "^1.0.30",
     "@types/node": "^16.11.47",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.7.4",
-    "web-vitals": "^2.1.4"
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.30.1",
+    "prettier": "^2.7.1",
+    "prettier-eslint": "^15.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint 'src'"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
+  "prettierOptions": {
+    "bracketSpacing": true
   },
   "browserslist": {
     "production": [
