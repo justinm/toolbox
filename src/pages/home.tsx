@@ -13,8 +13,10 @@ import ColorMatcher from "../matchers/colors";
 import IPMatcher from "../matchers/ipv4";
 import { useDebounce } from "../utils/debounce";
 import { useAnalytics } from "use-analytics";
+import JWTDecoder from "../matchers/jwt";
 
 const matchers: IMatcher[] = [
+  new JWTDecoder(),
   new ColorMatcher(),
   new IPMatcher(),
   new TimestampMatcher(),
