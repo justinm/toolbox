@@ -1,7 +1,22 @@
-import React from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { useHistory } from "../providers/history";
 
-export const useSearchParams = () => {
+export interface ISearchParamContext {
+  readonly params: URLSearchParams;
+  readonly setParam: (key: string, value: string) => void;
+}
+
+export const SearchParamContext = React.createContext<
+  ISearchParamContext | undefined
+>(undefined);
+
+export interface SearchParamsProviderProps {
+  readonly children: ReactNode;
+}
+
+export const SearchParamsProvider: FunctionComponent<
+  SearchParamsProviderProps
+> = ({ children }) => {
   const history = useHistory();
   const params = React.useMemo(
     () => new URLSearchParams(window.location.search),
@@ -20,5 +35,17 @@ export const useSearchParams = () => {
     [params, history]
   );
 
-  return { setParam, params };
+  if (!params) {
+    return null;
+  }
+
+  return (
+    <SearchParamContext.Provider value={{ setParam, params }}>
+      {children}
+    </SearchParamContext.Provider>
+  );
+};
+
+export const useSearchParams = () => {
+  return React.useContext(SearchParamContext) as ISearchParamContext;
 };

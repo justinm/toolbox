@@ -5,31 +5,23 @@ import { useQueryHistory } from "../../providers/query-history";
 
 export interface SearchBarProps {
   readonly onSearch: (input: string) => void;
-  readonly initialValue?: string | null;
+  readonly query: string | null;
 }
 export const SearchBar: FunctionComponent<SearchBarProps> = ({
   onSearch,
-  initialValue,
+  query,
 }) => {
-  const { history, push } = useQueryHistory();
-  const [searchQuery, setSearchQuery] = React.useState(
-    initialValue ? initialValue : (history.length ? history[0].query : "") ?? ""
-  );
+  const { history } = useQueryHistory();
   const options = React.useMemo(
-    () => history.filter((h) => h.query !== searchQuery).map((h) => h.query),
-    [history, searchQuery]
+    () => history.filter((h) => h.query !== query).map((h) => h.query),
+    [history, query]
   );
-
-  React.useEffect(() => {
-    onSearch(searchQuery);
-    push(searchQuery);
-  }, [push, onSearch, searchQuery]);
 
   const onChange = React.useCallback(
     (evt: SyntheticEvent, value: string | null) => {
-      setSearchQuery(value ? value : "");
+      onSearch(value ? value : "");
     },
-    []
+    [onSearch]
   );
 
   return (
@@ -41,7 +33,7 @@ export const SearchBar: FunctionComponent<SearchBarProps> = ({
         clearOnEscape={true}
         clearOnBlur={true}
         options={options}
-        value={searchQuery}
+        value={query}
         onChange={onChange}
         renderInput={(params) => (
           <TextField
@@ -49,6 +41,7 @@ export const SearchBar: FunctionComponent<SearchBarProps> = ({
             id="query"
             label="Your Query"
             variant="standard"
+            size={"small"}
             InputProps={{
               ...params.InputProps,
               // type: "search",

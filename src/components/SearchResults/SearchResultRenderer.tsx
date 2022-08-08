@@ -20,11 +20,11 @@ export const SearchResultRenderer: FunctionComponent<
     () =>
       matches.map((m) => {
         try {
-          console.log(`Trying to render ${m.type}`);
+          console.debug(`Trying to render ${m.type}`);
 
           return m.render(query);
         } catch (err) {
-          console.log("Renderer threw error", err);
+          console.debug("Renderer threw error", err);
 
           return undefined;
         }

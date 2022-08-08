@@ -10,6 +10,7 @@ import "./index.css";
 import { HistoryProvider } from "./providers/history";
 import { ReportHandler } from "web-vitals";
 import { QueryHistoryProvider } from "./providers/query-history";
+import { SearchParamsProvider } from "./utils/searchParams";
 
 const measurementIds: string[] = [];
 
@@ -34,13 +35,15 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <QueryHistoryProvider>
+    <AnalyticsProvider instance={analytics}>
       <HistoryProvider>
-        <AnalyticsProvider instance={analytics}>
-          <App />
-        </AnalyticsProvider>
+        <SearchParamsProvider>
+          <QueryHistoryProvider>
+            <App />
+          </QueryHistoryProvider>
+        </SearchParamsProvider>
       </HistoryProvider>
-    </QueryHistoryProvider>
+    </AnalyticsProvider>
   </React.StrictMode>
 );
 
