@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardContent,
-  CardHeader,
   Divider,
   Paper,
   Typography,
@@ -22,7 +21,7 @@ export const SearchResult: FunctionComponent<SearchResultProps> = ({
 
   const onHover = React.useCallback(
     (val: boolean) => () => setElevation(val ? 5 : 1),
-    [elevation]
+    []
   );
 
   return (

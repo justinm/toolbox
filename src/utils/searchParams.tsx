@@ -5,7 +5,7 @@ export const useSearchParams = () => {
   const history = useHistory();
   const params = React.useMemo(
     () => new URLSearchParams(window.location.search),
-    [window.location.search]
+    []
   );
 
   const setParam = React.useCallback(
@@ -17,7 +17,7 @@ export const useSearchParams = () => {
       }
       history.push({ search: params.toString() });
     },
-    [params]
+    [params, history]
   );
 
   return { setParam, params };
