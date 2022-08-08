@@ -28,26 +28,17 @@ const matchers: IMatcher[] = [
 
 export const Home: FunctionComponent = () => {
   const { track } = useAnalytics();
-  const { setParam, params } = useSearchParams();
   const [searchQuery, setSearchQuery] = React.useState("");
-  const q = React.useMemo(() => params.get("q"), []);
+  const { params } = useSearchParams();
+  const q = React.useMemo(() => params.get("q"), [params]);
   const debouncedQ = useDebounce(searchQuery, 1000);
 
   React.useEffect(() => {
-    if (q && q !== searchQuery) {
-      setSearchQuery(q);
-    }
-  }, [q]);
-
-  React.useEffect(() => {
-    setParam("q", searchQuery);
-  }, [setParam, searchQuery]);
-
-  React.useEffect(() => {
-    if (debouncedQ) {
+    if (debouncedQ && debouncedQ !== "") {
+      // push(debouncedQ);
       void track("query", debouncedQ);
     }
-  }, [debouncedQ]);
+  }, [debouncedQ, track]);
 
   return (
     <Box>
@@ -55,7 +46,7 @@ export const Home: FunctionComponent = () => {
       {searchQuery && searchQuery !== "" ? (
         <SearchResultRenderer query={searchQuery} matchers={matchers} />
       ) : (
-        <div>No Query</div>
+        <div />
       )}
     </Box>
   );

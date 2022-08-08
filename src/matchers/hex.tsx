@@ -39,8 +39,8 @@ export class HEXConverter implements IMatcher {
     return undefined;
   }
 
-  readonly type: string = "haxToDecimal";
-  readonly title: string = "Hexidecimal";
+  readonly type: string = "hexToDecimal";
+  readonly title: string = "Hexadecimal";
 }
 
 export default HEXConverter;

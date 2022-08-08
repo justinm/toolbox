@@ -59,7 +59,7 @@ export const KeyValueTable: FunctionComponent<{
   values: KeyValuePairs;
 }> = ({ values }) => {
   return (
-    <Table>
+    <Table size={"small"}>
       <TableBody>
         {(() =>
           Object.keys(values).map((v) => (

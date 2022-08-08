@@ -1,11 +1,10 @@
 import { IMatcher } from "calculator-types";
-import { MultilineTextSearchResult } from "../components/SearchResults/MultilineTextSearchResult";
 import jwtDecode from "jwt-decode";
 import { JsonResult } from "../components/SearchResults/JsonResult";
 
 export class JWTDecoder implements IMatcher {
   public matches(input: string) {
-    return !input.match(/^([A-Za-z0-9-_]\.?){3}$/);
+    return !!input.match(/^([A-Za-z0-9-_]\.?){3}$/);
   }
 
   public render(input: string) {
@@ -13,7 +12,6 @@ export class JWTDecoder implements IMatcher {
       try {
         const headers = jwtDecode(input, { header: true });
         const token = jwtDecode(input);
-        // const token = jwt.decode(input);
 
         return (
           <>

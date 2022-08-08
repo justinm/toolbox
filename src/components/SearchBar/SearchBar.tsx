@@ -1,15 +1,7 @@
-import React, {
-  ChangeEvent,
-  ChangeEventHandler,
-  FunctionComponent,
-} from "react";
+import React, { FunctionComponent, SyntheticEvent } from "react";
 import { SearchRounded } from "@mui/icons-material";
-import { Box, TextField } from "@mui/material";
-import { useDebounce } from "../../utils/debounce";
-
-export interface ISearchBarForm {
-  readonly search: string;
-}
+import { Autocomplete, Box, TextField } from "@mui/material";
+import { useQueryHistory } from "../../providers/query-history";
 
 export interface SearchBarProps {
   readonly onSearch: (input: string) => void;
@@ -19,29 +11,50 @@ export const SearchBar: FunctionComponent<SearchBarProps> = ({
   onSearch,
   initialValue,
 }) => {
+  const { history, push } = useQueryHistory();
   const [searchQuery, setSearchQuery] = React.useState(
-    initialValue ? initialValue : ""
+    initialValue ? initialValue : (history.length ? history[0].query : "") ?? ""
   );
-  const debouncedValue = useDebounce(searchQuery, 200);
+  const options = React.useMemo(
+    () => history.filter((h) => h.query !== searchQuery).map((h) => h.query),
+    [history, searchQuery]
+  );
 
   React.useEffect(() => {
-    onSearch(debouncedValue);
-  }, [onSearch, debouncedValue]);
+    onSearch(searchQuery);
+    push(searchQuery);
+  }, [push, onSearch, searchQuery]);
 
-  const onChange = React.useCallback((evt: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(evt.target.value);
-  }, []);
+  const onChange = React.useCallback(
+    (evt: SyntheticEvent, value: string | null) => {
+      setSearchQuery(value ? value : "");
+    },
+    []
+  );
 
   return (
     <Box sx={{ display: "flex", alignItems: "flex-end", padding: 1 }}>
       <SearchRounded sx={{ color: "action.active", mr: 1, my: 0.5 }} />
-      <TextField
+      <Autocomplete
+        freeSolo
         fullWidth
-        id="query"
-        label="Your Query"
-        variant="standard"
-        onChange={onChange}
+        clearOnEscape={true}
+        clearOnBlur={true}
+        options={options}
         value={searchQuery}
+        onChange={onChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            id="query"
+            label="Your Query"
+            variant="standard"
+            InputProps={{
+              ...params.InputProps,
+              // type: "search",
+            }}
+          />
+        )}
       />
     </Box>
   );

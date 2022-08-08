@@ -13,11 +13,22 @@ export const SearchResultRenderer: FunctionComponent<
 > = ({ query, matchers }) => {
   const matches = React.useMemo(
     () => matchers.filter((m) => m.matches(query)),
-    [query]
+    [query, matchers]
   );
 
   const renders = React.useMemo(
-    () => matches.map((m) => m.render(query)),
+    () =>
+      matches.map((m) => {
+        try {
+          console.log(`Trying to render ${m.type}`);
+
+          return m.render(query);
+        } catch (err) {
+          console.log("Renderer threw error", err);
+
+          return undefined;
+        }
+      }),
     [matches, query]
   );
 
@@ -31,7 +42,7 @@ export const SearchResultRenderer: FunctionComponent<
   }
 
   return (
-    <Stack divider={<Divider flexItem />}>
+    <Stack divider={<Divider flexItem />} spacing={2}>
       {(() =>
         matches
           .map((m, i) => {
