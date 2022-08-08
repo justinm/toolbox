@@ -12,7 +12,7 @@ import { ReportHandler } from "web-vitals";
 import { QueryHistoryProvider } from "./providers/query-history";
 import { SearchParamsProvider } from "./utils/searchParams";
 
-const measurementIds: string[] = [];
+const measurementIds: string[] = ["G-Y95CW6KTF5"];
 
 const plugins = [doNotTrack()];
 
