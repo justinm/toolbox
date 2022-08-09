@@ -14,16 +14,18 @@ import { useAnalytics } from "use-analytics";
 import JWTDecoder from "../../matchers/jwt";
 import { Examples } from "./Examples";
 import { useQueryHistory } from "../../providers/query-history";
+import JSONMatcher from "../../matchers/json";
 
 const matchers: IMatcher[] = [
   new JWTDecoder(),
   new ColorMatcher(),
   new IPMatcher(),
   new TimestampMatcher(),
+  new JSONMatcher(),
   new HEXConverter(),
-  new URLEncoding(),
   new Base64DecodeMatcher(),
   new Base64EncodeMatcher(),
+  new URLEncoding(),
 ];
 
 export const Home: FunctionComponent = () => {
