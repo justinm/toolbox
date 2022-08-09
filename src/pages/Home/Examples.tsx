@@ -52,6 +52,10 @@ export const Examples: FunctionComponent = () => {
       </Typography>
       <Stack sx={{ padding: 2 }} spacing={1}>
         <Example
+          example={"whoami"}
+          description={"Displays information regarding your client/browser"}
+        />
+        <Example
           example={"1659960381"}
           description={"Displays information for a given UNIX timestamp"}
         />

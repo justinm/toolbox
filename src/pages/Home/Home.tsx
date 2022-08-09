@@ -15,8 +15,10 @@ import JWTDecoder from "../../matchers/jwt";
 import { Examples } from "./Examples";
 import { useQueryHistory } from "../../providers/query-history";
 import JSONMatcher from "../../matchers/json";
+import WhoAmI from "../../matchers/whoami";
 
 const matchers: IMatcher[] = [
+  new WhoAmI(),
   new JWTDecoder(),
   new ColorMatcher(),
   new IPMatcher(),
