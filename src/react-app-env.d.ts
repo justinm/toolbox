@@ -1,7 +1,12 @@
 /// <reference types="react-scripts" />
 
 declare module "calculator-types" {
-  import { ReactNode } from "react";
+  import { FunctionComponent, ReactNode } from "react";
+
+  export interface Query extends FunctionComponent<{ readonly query: string }> {
+    title: string;
+    matcher: (query: string) => boolean;
+  }
 
   export interface IMatcher {
     readonly matches: (input: string) => boolean;

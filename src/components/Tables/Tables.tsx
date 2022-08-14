@@ -62,9 +62,18 @@ export const KeyValueTable: FunctionComponent<{
     <Table size={"small"}>
       <TableBody>
         {(() =>
-          Object.keys(values).map((v) => (
-            <KeyValueTableRow key={v} title={v} value={values[v]} />
-          )))()}
+          Object.keys(values)
+            .filter((k) => {
+              console.log(k, typeof values[k]);
+              if (typeof values[k] === "number") {
+                return !isNaN(values[k] as number);
+              }
+
+              return !!values[k];
+            })
+            .map((v) => (
+              <KeyValueTableRow key={v} title={v} value={values[v]} />
+            )))()}
       </TableBody>
     </Table>
   );

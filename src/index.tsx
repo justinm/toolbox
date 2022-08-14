@@ -11,6 +11,8 @@ import { HistoryProvider } from "./providers/history";
 import { ReportHandler } from "web-vitals";
 import { QueryHistoryProvider } from "./providers/query-history";
 import { SearchParamsProvider } from "./utils/searchParams";
+import { GeoipProvider } from "./providers/geoip-provider";
+import { StorageProvider } from "./providers/storage-provider";
 
 const measurementIds: string[] = ["G-Y95CW6KTF5"];
 
@@ -35,15 +37,19 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <AnalyticsProvider instance={analytics}>
-      <HistoryProvider>
-        <SearchParamsProvider>
-          <QueryHistoryProvider>
-            <App />
-          </QueryHistoryProvider>
-        </SearchParamsProvider>
-      </HistoryProvider>
-    </AnalyticsProvider>
+    <StorageProvider>
+      <AnalyticsProvider instance={analytics}>
+        <HistoryProvider>
+          <SearchParamsProvider>
+            <QueryHistoryProvider>
+              <GeoipProvider>
+                <App />
+              </GeoipProvider>
+            </QueryHistoryProvider>
+          </SearchParamsProvider>
+        </HistoryProvider>
+      </AnalyticsProvider>
+    </StorageProvider>
   </React.StrictMode>
 );
 

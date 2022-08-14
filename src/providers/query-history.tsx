@@ -1,8 +1,14 @@
 import React, { FunctionComponent, ReactNode } from "react";
 import { useSearchParams } from "../utils/searchParams";
+import { useStorage } from "./storage-provider";
+
+export interface HistoryEntry {
+  readonly query: string;
+  readonly time: number;
+}
 
 export interface IQueryHistoryContext {
-  readonly history: { query: string; time: number }[];
+  readonly history: HistoryEntry[];
   readonly current: string;
   readonly push: (query: string) => void;
 }
@@ -20,6 +26,7 @@ export interface QueryHistoryProviderProps {
 export const QueryHistoryProvider: FunctionComponent<
   QueryHistoryProviderProps
 > = ({ children }) => {
+  const { setKey, getKey } = useStorage();
   const [history, setHistory] = React.useState<
     { query: string; time: number }[] | undefined
   >();
@@ -40,26 +47,21 @@ export const QueryHistoryProvider: FunctionComponent<
 
         setHistory(newHistory);
 
-        window.sessionStorage.setItem("history", JSON.stringify(newHistory));
+        void setKey("history", newHistory);
       }
     },
-    [history]
+    [history, setKey]
   );
 
   React.useEffect(() => {
     if (!history) {
-      const h = window.sessionStorage.getItem("history");
-
-      try {
-        if (h && h !== "") {
-          setHistory(JSON.parse(h));
-        } else {
-          setHistory([]);
-        }
-      } catch (err) {
-        setHistory([]);
-        console.error(err);
-      }
+      getKey("history")
+        .then((h) => {
+          console.log(h);
+          console.log(typeof h);
+          setHistory((h as HistoryEntry[]) ?? []);
+        })
+        .catch(() => setHistory([]));
     }
 
     if (history && !ready) {
@@ -71,7 +73,7 @@ export const QueryHistoryProvider: FunctionComponent<
 
       setReady(true);
     }
-  }, [params, history, ready, push, setParam]);
+  }, [params, history, ready, push, getKey, setParam]);
 
   const current = React.useMemo(
     () => (history && history[0]?.query) ?? "",
