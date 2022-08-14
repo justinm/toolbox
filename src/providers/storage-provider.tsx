@@ -1,12 +1,6 @@
 import React, { FunctionComponent, ReactNode } from "react";
 
-export type SavableType =
-  | Record<string | number, unknown>
-  | any[]
-  | string
-  | boolean
-  | null
-  | undefined;
+export type SavableType = {} | any[] | string | boolean | null | undefined;
 
 export interface IStorageContext {
   readonly setKey: (key: string, value: SavableType) => Promise<void>;
@@ -62,3 +56,32 @@ export const StorageProvider: FunctionComponent<StorageProviderProps> = ({
 export const useStorage = () => {
   return React.useContext(StorageContext);
 };
+
+export function useStorageKey<T extends SavableType>(
+  key: string
+): [T | undefined, (data: T) => void, boolean] {
+  const [cache, setCache] = React.useState<T | undefined>(undefined);
+  const [ready, setReady] = React.useState(false);
+  const { getKey, setKey } = useStorage();
+
+  React.useEffect(() => {
+    getKey(key)
+      .then((data) => {
+        setCache(data as T);
+        setReady(true);
+      })
+      .catch(() => setReady(true));
+  }, [key, getKey, setCache, setReady]);
+
+  const setData = React.useCallback(
+    (data: SavableType) => {
+      if (ready) {
+        setCache(data as T);
+        void setKey(key, data);
+      }
+    },
+    [ready, setCache, key, setKey]
+  );
+
+  return [cache, setData, ready];
+}

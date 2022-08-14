@@ -1,12 +1,23 @@
 import { KeyValueTable } from "../components/Tables/Tables";
 import UAParser from "ua-parser-js";
-import { AllowLookupButton } from "../components/AllowGeoLookup/AllowLookupButton";
+import { AllowGeoLookupButton } from "../components/AllowGeoLookup/AllowGeoLookupButton";
 import { queryBuilder } from "../utils/queryBuilder";
 import React from "react";
+import { useGeoData } from "../providers/geo-data-provider";
+import { Alert, Box, Link } from "@mui/material";
+import { Center } from "../components/Typography/Center";
 
 const keywords = ["whatismyip", "whoami", "ip"];
 
 export const WhoAmIQuery = queryBuilder("Who Am I", ({ query }) => {
+  const { loadGeoData, geoData, geoError } = useGeoData();
+
+  React.useEffect(() => {
+    if (!geoData && loadGeoData) {
+      loadGeoData();
+    }
+  }, [loadGeoData, geoData]);
+
   const matches = React.useMemo(
     () =>
       keywords
@@ -16,10 +27,9 @@ export const WhoAmIQuery = queryBuilder("Who Am I", ({ query }) => {
   );
 
   const parser = React.useMemo(() => matches && new UAParser(), [matches]);
-
   const values = React.useMemo(() => {
     if (parser) {
-      const values: Record<string, string> = {};
+      let values: Record<string, string | number | boolean> = {};
 
       values["User Agent"] = parser.getUA() ?? "Unknown";
 
@@ -54,7 +64,26 @@ export const WhoAmIQuery = queryBuilder("Who Am I", ({ query }) => {
   return (
     <>
       <KeyValueTable values={values} />
-      <AllowLookupButton />
+      <AllowGeoLookupButton />
+
+      {(() =>
+        (geoData || geoError) && (
+          <Box>
+            <Box sx={{ margin: 4 }}>
+              <Center variant={"h5"}>Data provided by</Center>
+              <Center variant={"h5"}>
+                <Link href={"https://geoiplookup.io"} target={"_blank"}>
+                  geoiplookup.io
+                </Link>
+              </Center>
+            </Box>
+            {(() =>
+              geoError && (
+                <Alert severity={"error"}>{geoError.message}</Alert>
+              ))()}
+            {(() => geoData && <KeyValueTable values={geoData as {}} />)()}
+          </Box>
+        ))()}
     </>
   );
 });

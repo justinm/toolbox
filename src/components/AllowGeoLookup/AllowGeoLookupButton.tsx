@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from "react";
-import { useGeoIp } from "../../providers/geoip-provider";
+import { useGeoData } from "../../providers/geo-data-provider";
 import { AllowGeoLookupDialog } from "./AllowGeoLookupDialog";
 import { Box, Button } from "@mui/material";
 
-export const AllowLookupButton: FunctionComponent = () => {
-  const { getGeoData, acceptTerms } = useGeoIp();
+export const AllowGeoLookupButton: FunctionComponent = () => {
+  const { loadGeoData, acceptTerms } = useGeoData();
   const [open, setOpen] = React.useState(false);
 
   const onCloseClick = React.useCallback(() => {
@@ -20,7 +20,7 @@ export const AllowLookupButton: FunctionComponent = () => {
     setOpen(false);
   }, [setOpen, acceptTerms]);
 
-  if (getGeoData) {
+  if (loadGeoData) {
     return null;
   }
 
@@ -39,7 +39,7 @@ export const AllowLookupButton: FunctionComponent = () => {
         onAccept={onAcceptClick}
       />
       <Button variant="outlined" onClick={onOpenClick}>
-        Load More Data
+        Load GeoIP Data
       </Button>
     </Box>
   );

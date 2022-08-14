@@ -57,8 +57,6 @@ export const QueryHistoryProvider: FunctionComponent<
     if (!history) {
       getKey("history")
         .then((h) => {
-          console.log(h);
-          console.log(typeof h);
           setHistory((h as HistoryEntry[]) ?? []);
         })
         .catch(() => setHistory([]));

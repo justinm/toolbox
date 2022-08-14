@@ -10,7 +10,7 @@ import React, { FunctionComponent, ReactElement, ReactNode } from "react";
 import { CopyElement, CopyElementProps } from "../CopyElement/CopyElement";
 
 export interface KeyValuePairs {
-  [key: string]: ReactElement | string | number;
+  [key: string]: ReactElement | string | number | boolean;
 }
 
 export const TableRowColumnHeader = styled(TableCell)(({ theme }) => ({
@@ -64,7 +64,6 @@ export const KeyValueTable: FunctionComponent<{
         {(() =>
           Object.keys(values)
             .filter((k) => {
-              console.log(k, typeof values[k]);
               if (typeof values[k] === "number") {
                 return !isNaN(values[k] as number);
               }
@@ -72,7 +71,11 @@ export const KeyValueTable: FunctionComponent<{
               return !!values[k];
             })
             .map((v) => (
-              <KeyValueTableRow key={v} title={v} value={values[v]} />
+              <KeyValueTableRow
+                key={v}
+                title={v}
+                value={values[v].toString()}
+              />
             )))()}
       </TableBody>
     </Table>
